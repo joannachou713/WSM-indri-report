@@ -1,0 +1,4 @@
+query: 401 QueryThread::_initialize exception
+UtilityThread exiting from exception IndriRunQuery.cpp(611): QueryThread::_initialize
+	../src/Repository.cpp(435): Couldn't open a repository in read-only mode at 'index/WT2G' because:
+	../src/Parameters.cpp(469): Couldn't open parameter file 'index/WT2G/manifest' for reading.

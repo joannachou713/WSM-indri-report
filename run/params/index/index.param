@@ -1,0 +1,8 @@
+<parameters>
+   <index>index/WT2G</index>
+   <corpus>
+      <path>../WT2G</path>
+      <class>trecweb</class>
+   </corpus>
+   <memory>1000m</memory>
+</parameters>
