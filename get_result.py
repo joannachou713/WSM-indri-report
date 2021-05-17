@@ -98,12 +98,19 @@ qns = all_data[(all_data['query']=='q+des') & (all_data['index']=='none') & (all
 qsn = all_data[(all_data['query']=='q+des') & (all_data['index']=='Stem') & (all_data['stop']=='none')].reset_index()
 qss = all_data[(all_data['query']=='q+des') & (all_data['index']=='Stem') & (all_data['stop']=='Stop')].reset_index()
 
+'''
+Generate All Interpolated Precision Curve and Precision@K curve
+'''
 all_cases = [nnn, nns, nsn, nss, dnn, dns, dsn, dss, qnn, qns, qsn, qss]
-# for case in all_cases:
-#     print(case)
-#     df2save_ipd(case)
-#     df2save_pak(case)
+for case in all_cases:
+    print(case)
+    df2save_ipd(case)
+    df2save_pak(case)
 
+
+'''
+Generate Grouped Data Graphs
+'''
 print(all_data)
 
 a = all_data.iloc[12]  
@@ -111,6 +118,9 @@ b = all_data.iloc[13]
 c = all_data.iloc[14]  
 d = all_data.iloc[15]  
 
+'''
+Generate F1 Score Barchart(under different ranking function)
+'''
 X = ['Okapi', 'LM', 'LMJM', 'LMFB']
 flg = plt.figure()
 X_axis = np.arange(len(X))
@@ -122,20 +132,24 @@ plt.title(title)
 plt.savefig(f'result_img/add LMFB/{title}.png')
 plt.show()
 
-# X = ['Okapi', 'LM', 'LMJM']
-# print(a, b, sep='\n')
-# flg = plt.figure()
-# X_axis = np.arange(len(X))
-# plt.bar(X_axis - 0.2,a['f1'], 0.2, label='Normal', color='teal', alpha=0.5)
-# plt.bar(X_axis,b['f1'], 0.2, label='Description', color='blue', alpha=0.5)
-# plt.bar(X_axis + 0.2,c['f1'], 0.2, label='Query + Description', color='lightgreen', alpha=0.5)
-# plt.xticks(X_axis, X)
-# plt.legend(loc = "best")
-# title = 'Comparing Query Type F1 Score'
-# plt.title(title)
-# plt.savefig(f'result_img/{title}.png')
-# plt.show()
+X = ['Okapi', 'LM', 'LMJM']
+print(a, b, sep='\n')
+flg = plt.figure()
+X_axis = np.arange(len(X))
+plt.bar(X_axis - 0.2,a['f1'], 0.2, label='Normal', color='teal', alpha=0.5)
+plt.bar(X_axis,b['f1'], 0.2, label='Description', color='blue', alpha=0.5)
+plt.bar(X_axis + 0.2,c['f1'], 0.2, label='Query + Description', color='lightgreen', alpha=0.5)
+plt.xticks(X_axis, X)
+plt.legend(loc = "best")
+title = 'Comparing Query Type F1 Score'
+plt.title(title)
+plt.savefig(f'result_img/{title}.png')
+plt.show()
 
+'''
+Generate Interpolated Precision Curve and Precision@K curve
+Under different ranking functions and different setting parameters
+'''
 #ipd
 flg = plt.figure()
 drawCombine('Okapi', recall_lv, a['interpolated_pcurve_data'], 'Recall', 'interpolated precision')
