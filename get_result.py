@@ -17,7 +17,7 @@ columns=['index', 'stop', 'rank_fn', 'query', 'interpolated_pcurve_data', 'p_at_
 recall_lv = [0.00, 0.10, 0.20, 0.30, 0.40, 0.50, 0.60, 0.70, 0.80, 0.90, 1.00]
 p_at_doc_x = [5, 10, 15, 20, 30, 100, 200, 500, 1000]
 all_data = []
-with open('final_res copy.txt', 'r') as f:
+with open('./run/final_res.txt', 'r') as f:
     results = f.read()
     for result in results.split('  ----------------------------------------------------------------\n'):
         result_lines = result.split('\n')
@@ -111,12 +111,14 @@ for case in all_cases:
 '''
 Generate Grouped Data Graphs
 '''
-print(all_data)
+# print(all_data)
 
-a = all_data.iloc[12]  
-b = all_data.iloc[13]  
-c = all_data.iloc[14]  
-d = all_data.iloc[15]  
+a = all_data.iloc[40]  
+b = all_data.iloc[41]  
+c = all_data.iloc[42]  
+d = all_data.iloc[43]  
+e = all_data.iloc[25]  
+f = all_data.iloc[26]  
 
 '''
 Generate F1 Score Barchart(under different ranking function)
@@ -124,10 +126,11 @@ Generate F1 Score Barchart(under different ranking function)
 X = ['Okapi', 'LM', 'LMJM', 'LMFB']
 flg = plt.figure()
 X_axis = np.arange(len(X))
-plt.bar(X_axis, [a['f1'], b['f1'], c['f1'], d['f1']], label='Description', color='blue', alpha=0.5)
+plt.bar(X_axis, [a['f1'], b['f1'], c['f1'], d['f1']], color='blue', alpha=0.5)
+# plt.bar(X_axis + 0.15, [d['f1'], e['f1'], f['f1']], 0.3, label='Description', color='teal', alpha=0.5)
 plt.xticks(X_axis, X)
 plt.legend(loc = "best")
-title = 'Comparing Ranking Functions(add LM Psudo Feedback) F1 Score'
+title = 'Comparing Ranking Functions(add LMFB) F1 Score'
 plt.title(title)
 plt.savefig(f'result_img/add LMFB/{title}.png')
 plt.show()
@@ -138,12 +141,12 @@ flg = plt.figure()
 X_axis = np.arange(len(X))
 plt.bar(X_axis - 0.2,a['f1'], 0.2, label='Normal', color='teal', alpha=0.5)
 plt.bar(X_axis,b['f1'], 0.2, label='Description', color='blue', alpha=0.5)
-plt.bar(X_axis + 0.2,c['f1'], 0.2, label='Query + Description', color='lightgreen', alpha=0.5)
+plt.bar(X_axis + 0.2,c['f1'], 0.2, label='Description with title', color='lightgreen', alpha=0.5)
 plt.xticks(X_axis, X)
 plt.legend(loc = "best")
 title = 'Comparing Query Type F1 Score'
 plt.title(title)
-plt.savefig(f'result_img/{title}.png')
+plt.savefig(f'result_img/compare query/{title}.png')
 plt.show()
 
 '''
@@ -153,10 +156,10 @@ Under different ranking functions and different setting parameters
 #ipd
 flg = plt.figure()
 drawCombine('Okapi', recall_lv, a['interpolated_pcurve_data'], 'Recall', 'interpolated precision')
-drawCombine('Language Model', recall_lv, b['interpolated_pcurve_data'], 'Recall', 'interpolated precision')
-drawCombine('Language Model with JM smoothing', recall_lv, c['interpolated_pcurve_data'], 'Recall', 'interpolated precision')
-drawCombine('Language Model with Pseudo Feedback', recall_lv, d['interpolated_pcurve_data'], 'Recall', 'interpolated precision')
-title = 'Comparing Ranking Functions - add LM Psudo Feedback - interpolated_pcurve'
+drawCombine('LM', recall_lv, b['interpolated_pcurve_data'], 'Recall', 'interpolated precision')
+drawCombine('LMJM', recall_lv, c['interpolated_pcurve_data'], 'Recall', 'interpolated precision')
+drawCombine('LMFB', recall_lv, d['interpolated_pcurve_data'], 'Recall', 'interpolated precision')
+title = 'Comparing Ranking Functions(add LMFB) - interpolated_pcurve'
 print(title)
 plt.title(title)
 plt.savefig(f'result_img/add LMFB/{title}-ipd.png')
@@ -164,12 +167,43 @@ plt.close('all')
 #pak
 flg = plt.figure()
 drawCombine('Okapi', p_at_doc_x, a['p_at_k'], 'At n docs', 'Precision')
-drawCombine('Language Model', p_at_doc_x, b['p_at_k'], 'At n docs', 'Precision')
-drawCombine('Language Model with JM smoothing', p_at_doc_x, c['p_at_k'], 'At n docs', 'Precision')
-drawCombine('Language Model with Pseudo Feedback', p_at_doc_x, d['p_at_k'], 'At n docs', 'Precision')
-title = 'Comparing Ranking Functions - add LM Psudo Feedback - precision_at_K'
+drawCombine('LM', p_at_doc_x, b['p_at_k'], 'At n docs', 'Precision')
+drawCombine('LMJM', p_at_doc_x, c['p_at_k'], 'At n docs', 'Precision')
+drawCombine('LMFB', p_at_doc_x, d['p_at_k'], 'At n docs', 'Precision')
+title = 'Comparing Ranking Functions(add LMFB) - precision_at_K'
 print(title)
 plt.title(title)
 plt.savefig(f'result_img/add LMFB/{title}-pak.png')
 plt.close('all')
 
+
+'''
+Examine all retrieved results 
+'''
+
+sort_by_ipd = all_data.sort_values(by=['interpolated_pcurve_data'], ascending=False).reset_index()
+print('interpolated_pcurve_data')
+print(sort_by_ipd.iloc[:10])
+sort_by_pak = all_data.sort_values(by=['p_at_k'], ascending=False).reset_index()
+print('p_at_k')
+print(sort_by_pak.iloc[:10])
+sort_by_f1 = all_data.sort_values(by=['f1'], ascending=False).reset_index()
+print('f1')
+print(sort_by_f1.iloc[:10])
+sort_by_precision = all_data.sort_values(by=['precision'], ascending=False).reset_index()
+print('precision')
+print(sort_by_precision.iloc[:10])
+sort_by_recall = all_data.sort_values(by=['recall'], ascending=False).reset_index()
+print('recall')
+print(sort_by_recall.iloc[:10])
+sort_by_ap = all_data.sort_values(by=['AP'], ascending=False).reset_index()
+print('AP')
+print(sort_by_ap.iloc[:10])
+sort_by_rp = all_data.sort_values(by=['RP'], ascending=False).reset_index()
+print('RP')
+print(sort_by_rp.iloc[:10])
+li = [sort_by_f1, sort_by_precision, sort_by_recall, sort_by_ap, sort_by_rp]
+li_s = ['f1', 'precision', 'recall', 'AP', 'RP']
+for each,s in zip(li, li_s):
+    print(s)
+    print(each.loc[:9, ['level_0','index','stop', 'rank_fn', 'query', 'f1', 'precision', 'recall', 'AP', 'RP']])
