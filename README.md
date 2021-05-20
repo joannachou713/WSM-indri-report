@@ -10,6 +10,7 @@ The file trees should look as the following shows
 ./WT2G
 ./Indri-5.18
 ./run
+./result_imgs
 ./<other files>
 ```
 
