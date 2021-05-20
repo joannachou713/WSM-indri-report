@@ -1,5 +1,5 @@
 # WSM-indri-report
-
+This experiment use Indri-5.18 to run the 50 TREC queries against WT2G collection, and evaluate the returned ranked list. The implemented ranking functions containing vector space model(Okapi TF-IDF), language model and some smoothing functions. Besides tuning ranking functions, I also modify the queries according to the TREC queries description and the indexing methods. This report shows the findings after experimenting these metioned parameters combinations.
 ## Download Indri-5.18
 Link: https://sourceforge.net/projects/lemur/files/lemur/
 
